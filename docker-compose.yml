@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: ./ansible/Dockerfile
+    tty: true
+    volumes:
+      - ./ansible:/ansible
+      - ./inventory.yml:/etc/ansible/hosts
+      - ./playbook.yml:/playbook.yml
+    networks:
+      - ansible
+  managed:
+    build: 
+      context: .
+      dockerfile: ./managed/Dockerfile
+    ports:
+      - "2222:22"
+    networks:
+      - ansible
+
+networks:
+  ansible:
+    driver: bridge
